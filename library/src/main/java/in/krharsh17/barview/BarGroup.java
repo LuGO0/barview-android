@@ -32,22 +32,21 @@ import java.util.Hashtable;
  * extends ConstraintLayout and implements Constants interface
  */
 class BarGroup extends ConstraintLayout implements Constants {
-    Context context;
-    TextView label;
-    View initial;
-    Bar bar;
-    TextView value;
-    ConstraintSet constraintSet;
-    LayoutParams labelParams;
-    LayoutParams initialParams;
-    String labelText;
-    String color;
-    String valueText;
-    float progress;
-    public int elevation;
-    public int radius;
-    public int numberOfLayers;
-
+    private int elevation;
+    private int radius;
+    private int numberOfLayers;
+    private Context context;
+    private TextView label;
+    private View initial;
+    private Bar bar;
+    private TextView value;
+    private ConstraintSet constraintSet;
+    private LayoutParams labelParams;
+    private LayoutParams initialParams;
+    private String labelText;
+    private String color;
+    private String valueText;
+    private float progress;
     private int animationType;
     private int animationDuration = Constants.DEFAULT_ANIMATION_DURATION;
     private int BAR_MARGIN = 6;
@@ -238,15 +237,13 @@ class BarGroup extends ConstraintLayout implements Constants {
         setupInitial();
         setupBar();
         setupValue();
-
         applyConstraints();
-
     }
 
     /**
      * Initializer function for the label segment
      */
-    void setupLabel() {
+    private void setupLabel() {
         labelParams = new Constraints.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
         labelParams.setMargins(
                 dp(8),
@@ -269,7 +266,7 @@ class BarGroup extends ConstraintLayout implements Constants {
      * Initializer function for the initial block
      *
      */
-    void setupInitial() {
+    private void setupInitial() {
         Drawable[] layers = new Drawable[this.numberOfLayers+1];
         for(int i =0 ;i<=this.numberOfLayers;i++){
             layers[i] = null;
@@ -343,8 +340,7 @@ class BarGroup extends ConstraintLayout implements Constants {
      * Initializer function for the value tooltip
      *
      */
-    void setupValue() {
-
+    private void setupValue() {
         value.setText(valueText);
         value.setBackground(context.getResources().getDrawable(R.drawable.label_background));
         value.setRotation(90);
@@ -388,7 +384,7 @@ class BarGroup extends ConstraintLayout implements Constants {
      * Sets constraints for all pieces of a BarGroup instance
      *
      */
-    void applyConstraints() {
+    private void applyConstraints() {
         constraintSet = new ConstraintSet();
         constraintSet.clone(this);
         constraintSet.setHorizontalBias(initial.getId(), 0.30f);
@@ -421,7 +417,7 @@ class BarGroup extends ConstraintLayout implements Constants {
      * @param dp
      * @return
      */
-    int dp(float dp) {
+    private int dp(float dp) {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics()));
     }
 
@@ -437,23 +433,26 @@ class BarGroup extends ConstraintLayout implements Constants {
      */
     public Drawable getRoundRect(String color,int currentLayer,int totalLayer,int radius) {
 
-        if(radius<0){
-            radius = 0;
-        }
-        if(radius>20){
-            radius = 20;
-        }
-
+        int localRadius=radius;
         int leftTopPadding = 1;
-        if(currentLayer%3==0){
-            leftTopPadding = 2;
-        }
         int rightPadding = 3;
         int bottomPadding = 3;
-
         String shadowalpha = null;
         int increment = 16 / (totalLayer - 2);
         int layernumber = 0;
+
+
+        if(radius<0){
+            localRadius = 0;
+        }
+        if(radius>20){
+            localRadius = 20;
+        }
+
+        if(currentLayer%3==0){
+            leftTopPadding = 2;
+        }
+
         if (currentLayer == totalLayer) {
             shadowalpha = "#";
         }else{
@@ -464,16 +463,16 @@ class BarGroup extends ConstraintLayout implements Constants {
             shadowalpha = alphaSet[layernumber] ;
         }
         RoundRectShape rectShape = new RoundRectShape(new float[]{
-                radius * 2, radius * 2, radius * 2, radius * 2,
-                radius * 2, radius * 2, radius * 2, radius * 2
+                localRadius * 2, localRadius * 2, localRadius * 2, localRadius * 2,
+                localRadius * 2, localRadius * 2, localRadius * 2, localRadius * 2
         }, null, null);
         if (totalLayer == currentLayer) {
-            if (radius == 0) {
-                radius = 2;
+            if (localRadius == 0) {
+                localRadius = 2;
             }
             rectShape = new RoundRectShape(new float[]{
-                    radius * 2, radius * 2, radius * 2, radius * 2,
-                    radius * 2, radius * 2, radius * 2, radius * 2
+                    localRadius * 2, localRadius * 2, localRadius * 2, localRadius * 2,
+                    localRadius * 2, localRadius * 2, localRadius * 2, localRadius * 2
             }, null, null);
         }
 
