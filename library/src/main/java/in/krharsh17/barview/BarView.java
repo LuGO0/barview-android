@@ -22,7 +22,6 @@ import java.util.List;
 public class BarView extends ScrollView implements Constants {
     public static final int INTRO_ANIM_NONE = 0;
     public static final int INTRO_ANIM_EXPAND = 1;
-
     private LinearLayout containerLayout;
     private Context context;
     private OnBarClickListener onBarClickListener;
