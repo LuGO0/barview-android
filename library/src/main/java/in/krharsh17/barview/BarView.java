@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static java.lang.Math.min;
+import java.lang.Math;
 
 /**
  * This is the custom view which is the cumulation of various individual barGroups
@@ -320,9 +320,9 @@ public class BarView extends ScrollView implements Constants {
         green = Math.min(Math.max(0,green+getRandomNumberInRange(-tolerance,tolerance)),255);
         red = Math.min(Math.max(0,red+getRandomNumberInRange(-tolerance,tolerance)),255);
 
-        approximateColor=0xff000000 | (red << 16) | (green << 8) | blue;
+        Integer newApproximateColor=0xff000000 | (red << 16) | (green << 8) | blue;
 
-        String approximateColorHexLiteral =Integer.toHexString(approximateColor);
+        String approximateColorHexLiteral =Integer.toHexString(newApproximateColor);
         return ("#"+approximateColorHexLiteral.substring(2));
     }
 
