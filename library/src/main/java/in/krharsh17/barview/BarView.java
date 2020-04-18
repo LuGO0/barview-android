@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import java.lang.Math;
-
 /**
  * This is the custom view which is the cumulation of various individual barGroups
  * extends from a ScrollView and implementing Constant interface
