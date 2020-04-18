@@ -6,14 +6,11 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,18 +19,16 @@ import java.util.Random;
 /**
  * This is the custom view which is the cumulation of various individual barGroups
  * extends from a ScrollView and implementing Constant interface
- *
  */
 public class BarView extends ScrollView implements Constants {
+    public static final int INTRO_ANIM_NONE = 0;
+    public static final int INTRO_ANIM_EXPAND = 1;
     private LinearLayout containerLayout;
     private Context context;
     private OnBarClickListener onBarClickListener;
     private List<BarGroup> barGroups;
     private List<BarModel> data;
     private boolean isDataPopulated;
-
-    public static final int INTRO_ANIM_NONE = 0;
-    public static final int INTRO_ANIM_EXPAND = 1;
     private int barMargin = 6;
     private int verticalSpacing = 48;
     private int barHeight = 20;
@@ -48,9 +43,9 @@ public class BarView extends ScrollView implements Constants {
     private int cornerRadius;
     private String labelTextColor = Constants.LABEL_TEXT_COLOR;
     private String valueTextColor = Constants.VALUE_TEXT_COLOR;
-    private String LABEL_FONT=null,VALUE_FONT=null;
-    private String rippleColor = Constants.RIPPLE_COLOR; // has to be >2
-
+    private String LABEL_FONT = null;
+    private String VALUE_FONT = null;
+    private String rippleColor = Constants.RIPPLE_COLOR;
 
     /**
      * parameterized constructors
@@ -70,7 +65,6 @@ public class BarView extends ScrollView implements Constants {
         containerLayout.setOrientation(LinearLayout.VERTICAL);
 
         this.addView(containerLayout);
-
     }
 
     /**
@@ -104,8 +98,8 @@ public class BarView extends ScrollView implements Constants {
             barHeight = a.getInteger(R.styleable.BarView_barHeight, barHeight);
             labelFontSize = a.getInteger(R.styleable.BarView_labelTextSize, labelFontSize);
             valueFontSize = a.getInteger(R.styleable.BarView_valueTextSize, valueFontSize);
-            VALUE_FONT=a.getString(R.styleable.BarView_labelFont);
-            LABEL_FONT=a.getString(R.styleable.BarView_labelFont);
+            VALUE_FONT = a.getString(R.styleable.BarView_labelFont);
+            LABEL_FONT = a.getString(R.styleable.BarView_labelFont);
             labelTextColor = a.getString(R.styleable.BarView_labelTextColor);
             valueTextColor = a.getString(R.styleable.BarView_valueTextColor);
             rippleColor = a.getString(R.styleable.BarView_rippleColor);
@@ -113,23 +107,27 @@ public class BarView extends ScrollView implements Constants {
             gradientStart = a.getString(R.styleable.BarView_gradientStart);
             gradientEnd = a.getString(R.styleable.BarView_gradientEnd);
             gradientDirection = a.getString(R.styleable.BarView_gradientDirection);
-            if (labelTextColor == null)
+            if (labelTextColor == null) {
                 labelTextColor = Constants.LABEL_TEXT_COLOR;
-            if (valueTextColor == null)
+            }
+            if (valueTextColor == null) {
                 valueTextColor = Constants.VALUE_TEXT_COLOR;
-            if (rippleColor == null)
+            }
+            if (rippleColor == null) {
                 rippleColor = RIPPLE_COLOR;
-            if (gradientDirection == null)
+            }
+            if (gradientDirection == null) {
                 gradientDirection = "horizontal";
-            if (backgroundColor != null)
+            }
+            if (backgroundColor != null) {
                 setBackgroundColor(backgroundColor);
-            if (gradientStart != null && gradientEnd != null)
+            }
+            if (gradientStart != null && gradientEnd != null) {
                 setBackgroundGradient(gradientStart, gradientEnd, gradientDirection);
+            }
             a.recycle();
         }
     }
-
-
 
     /**
      * Returns a reference to the attached Listener
@@ -148,31 +146,27 @@ public class BarView extends ScrollView implements Constants {
     public interface OnBarClickListener {
         void onBarClicked(int pos);
     }
- 
 
     public void setData(List<BarModel> data) {
         this.data = data;
-        if(animationType == BarView.INTRO_ANIM_NONE){
-            populateBarView(BarView.INTRO_ANIM_NONE,animationDuration);
-        }
-        else if (animationType == BarView.INTRO_ANIM_EXPAND){
-            populateBarView(BarView.INTRO_ANIM_EXPAND,animationDuration);
+        if (animationType == BarView.INTRO_ANIM_NONE) {
+            populateBarView(BarView.INTRO_ANIM_NONE, animationDuration);
+        } else if (animationType == BarView.INTRO_ANIM_EXPAND) {
+            populateBarView(BarView.INTRO_ANIM_EXPAND, animationDuration);
         }
         isDataPopulated = true;
     }
 
     public void setData(List<BarModel> data, boolean isAnimationEnabled) {
         this.data = data;
-        if (isAnimationEnabled){
-            if(animationType == BarView.INTRO_ANIM_NONE){
-                populateBarView(BarView.INTRO_ANIM_NONE,animationDuration);
+        if (isAnimationEnabled) {
+            if (animationType == BarView.INTRO_ANIM_NONE) {
+                populateBarView(BarView.INTRO_ANIM_NONE, animationDuration);
+            } else if (animationType == BarView.INTRO_ANIM_EXPAND) {
+                populateBarView(BarView.INTRO_ANIM_EXPAND, animationDuration);
             }
-            else if (animationType == BarView.INTRO_ANIM_EXPAND){
-                populateBarView(BarView.INTRO_ANIM_EXPAND,animationDuration);
-            }
-        }
-        else {
-            populateBarView(BarView.INTRO_ANIM_NONE,animationDuration);
+        } else {
+            populateBarView(BarView.INTRO_ANIM_NONE, animationDuration);
         }
     }
 
@@ -182,7 +176,7 @@ public class BarView extends ScrollView implements Constants {
      */
     private void populateBarView(int animationType, int animationDuration) {
         for (BarModel b : data) {
-            addBar(b,animationType,animationDuration);
+            addBar(b, animationType, animationDuration);
         }
     }
 
@@ -191,16 +185,15 @@ public class BarView extends ScrollView implements Constants {
      * a param and cumulates it into barGroups.
      *
      * @param data is a BarModel that contains all the required to
-     *             construct a BarGroup instance.
+     *     construct a BarGroup instance.
      */
-
-    private void addBar(BarModel data,int animationType,int animationDuration) {
+    private void addBar(BarModel data, int animationType, int animationDuration) {
         BarGroup barGroup = new BarGroup(
-                context,
-                data.getLabel(),
-                data.getColor(),
-                data.getValue(),
-                data.getFillRatio(),
+            context,
+            data.getLabel(),
+            data.getColor(),
+            data.getValue(),
+            data.getFillRatio(),
             animationType,
             animationDuration,
             barMargin,
@@ -214,10 +207,9 @@ public class BarView extends ScrollView implements Constants {
             cornerRadius,
             LABEL_FONT,
             VALUE_FONT,
-                data.getElevation(),
-                data.getRadius()
+            data.getElevation(),
+            data.getRadius()
         );
-
 
         barGroup.setOnTouchListener(new OnTouchListener() {
             private int CLICK_ACTION_THRESHOLD = 200;
@@ -241,7 +233,7 @@ public class BarView extends ScrollView implements Constants {
                         break;
                     default:
                         Log.d("BarView", "onTouch:Unknown Event ");
-                break;
+                        break;
                 }
                 return true;
             }
@@ -266,22 +258,22 @@ public class BarView extends ScrollView implements Constants {
     public void setBackgroundGradient(String startColor, String endColor, String direction) {
         GradientDrawable gd;
         switch (direction) {
-        case "horizontal":
-            gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
-                    new int[] { Color.parseColor(startColor), Color.parseColor(endColor) });
-            break;
-        case "vertical":
-            gd = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[] { Color.parseColor(startColor), Color.parseColor(endColor) });
-            break;
-        default:
-            gd = null;
-            break;
+            case "horizontal":
+                gd = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,
+                    new int[]{Color.parseColor(startColor), Color.parseColor(endColor)});
+                break;
+            case "vertical":
+                gd = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[]{Color.parseColor(startColor), Color.parseColor(endColor)});
+                break;
+            default:
+                gd = null;
+                break;
         }
-        if (gd != null)
+        if (gd != null) {
             containerLayout.setBackground(gd);
+        }
     }
-
 
     /**
      * This function returns a random color based on a constant {@value #CHAR_ARRAY}
@@ -339,7 +331,7 @@ public class BarView extends ScrollView implements Constants {
 
     public void setCornerRadius(int radius) {
         this.cornerRadius = radius;
-        if(isDataPopulated) {
+        if (isDataPopulated) {
             containerLayout.removeAllViews();
             populateBarView(animationType, animationDuration);
         }
@@ -348,34 +340,42 @@ public class BarView extends ScrollView implements Constants {
     /**
      * setters and getters
      */
+    public int getAnimationType() {
+        return animationType;
+    }
 
-    public int getAnimationType(){ return animationType; }
-
-    public void setAnimationType(int animationType){
+    public void setAnimationType(int animationType) {
         this.animationType = animationType;
     }
 
-    public int getAnimationDuration(){ return animationDuration; }
+    public int getAnimationDuration() {
+        return animationDuration;
+    }
 
-    public void setAnimationDuration(int animationDuration){
+    public void setAnimationDuration(int animationDuration) {
         this.animationDuration = animationDuration;
     }
 
     public int getBarMargin() {
         return barMargin;
     }
+
     public void setBarMargin(int barMargin) {
         this.barMargin = barMargin;
     }
+
     public int getVerticalSpacing() {
         return verticalSpacing;
     }
+
     public void setVerticalSpacing(int verticalSpacing) {
         this.verticalSpacing = verticalSpacing;
     }
+
     public int getBarHeight() {
         return barHeight;
     }
+
     public void setBarHeight(int barHeight) {
         this.barHeight = barHeight;
     }
@@ -411,7 +411,7 @@ public class BarView extends ScrollView implements Constants {
     public void setValueTextColor(String valueTextColor) {
         this.valueTextColor = valueTextColor;
     }
-    
+
     public String getRippleColor() {
         return rippleColor;
     }
@@ -419,5 +419,4 @@ public class BarView extends ScrollView implements Constants {
     public void setRippleColor(String rippleColor) {
         this.rippleColor = rippleColor;
     }
-
 }
